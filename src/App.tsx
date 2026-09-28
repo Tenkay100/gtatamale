@@ -34,7 +34,7 @@ function App() {
   const [eventCooldown, setEventCooldown] = useState(false);
 
   const keysPressed = useRef<Set<string>>(new Set());
-  const gameLoopRef = useRef<number>();
+  const gameLoopRef = useRef<number | undefined>(undefined);
 
   const currentMission: Mission | null = currentMissionIndex < missions.length
     ? missions[currentMissionIndex]
