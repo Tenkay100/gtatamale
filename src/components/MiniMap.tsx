@@ -9,34 +9,32 @@ interface MiniMapProps {
 }
 
 const MiniMap: React.FC<MiniMapProps> = ({ playerX, playerY, currentMission }) => {
-  const miniMapSize = 120;
-  const scale = miniMapSize / MAP_WIDTH;
-  const viewRange = 200; // How much of the map to show around player
+  const size = 130;
+  const aspect = MAP_HEIGHT / MAP_WIDTH;
+  const height = size * aspect;
 
   return (
-    <div className="absolute bottom-20 right-4 z-40 pointer-events-none">
+    <div className="absolute bottom-20 right-3 z-40">
       <div
-        className="rounded-lg border-2 border-cyan-600/50 overflow-hidden bg-gray-900/80 backdrop-blur-sm"
-        style={{ width: miniMapSize, height: miniMapSize * (MAP_HEIGHT / MAP_WIDTH) }}
+        className="rounded-lg border-2 border-cyan-500/60 overflow-hidden bg-gray-900/90"
+        style={{ width: size, height }}
       >
         <svg
-          viewBox={`${playerX - viewRange / 2} ${playerY - (viewRange / 2) * (MAP_HEIGHT / MAP_WIDTH)} ${viewRange} ${viewRange * (MAP_HEIGHT / MAP_WIDTH)}`}
-          className="w-full h-full"
+          viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`}
+          width={size}
+          height={height}
         >
           {/* Background */}
           <rect x="0" y="0" width={MAP_WIDTH} height={MAP_HEIGHT} fill="#1a1a2e" />
 
           {/* Roads */}
-          {roads.map((road, index) => (
+          {roads.map((road, i) => (
             <line
-              key={index}
-              x1={road.x1}
-              y1={road.y1}
-              x2={road.x2}
-              y2={road.y2}
+              key={i}
+              x1={road.x1} y1={road.y1}
+              x2={road.x2} y2={road.y2}
               stroke="#444"
-              strokeWidth={road.width * 0.8}
-              strokeLinecap="round"
+              strokeWidth={road.width}
             />
           ))}
 
@@ -44,10 +42,8 @@ const MiniMap: React.FC<MiniMapProps> = ({ playerX, playerY, currentMission }) =
           {locations.map((loc) => (
             <rect
               key={loc.id}
-              x={loc.x}
-              y={loc.y}
-              width={loc.width}
-              height={loc.height}
+              x={loc.x} y={loc.y}
+              width={loc.width} height={loc.height}
               fill={loc.color}
               opacity={0.6}
               rx="2"
@@ -56,30 +52,40 @@ const MiniMap: React.FC<MiniMapProps> = ({ playerX, playerY, currentMission }) =
 
           {/* Mission marker */}
           {currentMission && (
-            <circle
-              cx={currentMission.locationX + 40}
-              cy={currentMission.locationY + 30}
-              r="8"
-              fill="#ffff00"
-              opacity="0.8"
-            >
-              <animate attributeName="r" values="6;10;6" dur="1.5s" repeatCount="indefinite" />
-            </circle>
+            <g>
+              <circle
+                cx={currentMission.locationX + 40}
+                cy={currentMission.locationY + 30}
+                r="15"
+                fill="#ffff00"
+                opacity="0.7"
+              />
+              <text
+                x={currentMission.locationX + 40}
+                y={currentMission.locationY + 35}
+                fill="black"
+                fontSize="14"
+                fontWeight="bold"
+                textAnchor="middle"
+              >
+                !
+              </text>
+            </g>
           )}
 
           {/* Player */}
           <circle
             cx={playerX}
             cy={playerY}
-            r="5"
+            r="10"
             fill="#00ff88"
             stroke="white"
-            strokeWidth="1.5"
+            strokeWidth="3"
           />
         </svg>
       </div>
-      <div className="text-center text-cyan-400 text-[8px] mt-0.5 opacity-70">
-        TAMALE MAP
+      <div className="text-center text-cyan-400 text-[9px] mt-0.5 opacity-70 font-bold">
+        TAMALE
       </div>
     </div>
   );
